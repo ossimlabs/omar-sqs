@@ -1,6 +1,6 @@
 spring:
   application:
-    name: o2-sqs
+    name: omar-sqs
   cloud:
     config:
       enabled: false
