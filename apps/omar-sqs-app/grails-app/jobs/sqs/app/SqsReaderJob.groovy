@@ -66,8 +66,7 @@ class SqsReaderJob {
 
           messageBodyList = []
         }
-        def messageIds = messagesToDelete?.collect{it.MessageId}
-        log.info "MESSAGES DELETING!!!!  ${messageIds}"
+        log.info "MESSAGES DELETING!!!!"
         if(messagesToDelete) sqsService.deleteMessages(
                                        SqsUtils.sqsConfig.reader.queue,
                                        messagesToDelete)
