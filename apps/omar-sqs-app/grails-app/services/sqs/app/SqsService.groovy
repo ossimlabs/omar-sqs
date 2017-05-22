@@ -127,13 +127,15 @@ class SqsService {
       def messages
       try{
          def sqs = getSqs()
-//         ReceiveMessageRequest receiveMessageRequest =
-//                 new ReceiveMessageRequest()
-//                         .withQueueUrl(config.reader.queue)
-//                         .withWaitTimeSeconds(config.reader.waitTimeSeconds)
-//                         .withMaxNumberOfMessages(config.reader.maxNumberOfMessages)
-//         messages = sqs.receiveMessage(receiveMessageRequest).messages
-         messages = sqs.receiveMessage(config.reader.queue).messages
+         ReceiveMessageRequest receiveMessageRequest =
+                 new ReceiveMessageRequest()
+                         .withQueueUrl(config.reader.queue)
+                         .withWaitTimeSeconds(config.reader.waitTimeSeconds)
+                         .withMaxNumberOfMessages(config.reader.maxNumberOfMessages)
+         messages = sqs.receiveMessage(receiveMessageRequest).messages
+
+//         messages = sqs.receiveMessage(config.reader.queue).messages
+
          log.debug "Message"
       }
       catch(e)
