@@ -33,7 +33,7 @@ class SqsReaderJob {
               switch(destinationType)
               {
                 case "stdout":
-                  log.debug message.body
+                  log.info message.body
                   messagesToDelete << message
                   break
                 case "post":
