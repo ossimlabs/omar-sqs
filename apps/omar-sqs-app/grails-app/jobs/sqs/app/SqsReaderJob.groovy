@@ -33,12 +33,11 @@ class SqsReaderJob {
               switch(destinationType)
               {
                 case "stdout":
-                  println message.body
+                  log.debug message.body
                   messagesToDelete << message
                   break
                 case "post":
-                  String url = config.reader.destination.post.urlEndPoint
-                  println "POSTING TO URL ==== ${url}"
+                  url = config.reader.destination.post.urlEndPoint
                   log.info "Posting message to ${url}"
                   def result = sqsService.postMessage(url, message.body)
                  // is a 200 range response
@@ -67,7 +66,7 @@ class SqsReaderJob {
 
           messageBodyList = []
         }
-        println "MESSAGES DELETING!!!!"
+        log.info "MESSAGES DELETING!!!! ${messagesToDelete}"
         if(messagesToDelete) sqsService.deleteMessages(
                                        SqsUtils.sqsConfig.reader.queue,
                                        messagesToDelete)
