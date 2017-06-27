@@ -20,7 +20,7 @@ Ref: [omar-base](../../../omar-base/docs/install-guide/omar-ossim-base/)
 `http://artifacts.radiantbluecloud.com/artifactory/webapp/#/artifacts/browse/tree/General/omar-local/io/ossim/omar/apps/omar-sqs-app`
 
 ## Configuration
-Settings from the [Common Config Settings](../../../omar-common/docs/install-guide/omar-common#common-config-settings) can be added to the base YAML definition:
+Settings from the [Common Config Settings](../../../omar-common/docs/install-guide/omar-common/#common-config-settings) can be added to the base YAML definition:
 
 ```
 server:
@@ -32,8 +32,8 @@ omar:
     reader:
       queue: "https://<AmazonDNS>/<path_to_queue>"
       waitTimeSeconds: 20
-      maxNumberOfMessages: 1
-      pollingIntervalSeconds: 10
+      maxNumberOfMessages: 5
+      pollingIntervalSeconds: 3
       destination:
         type: "post"
         post:
