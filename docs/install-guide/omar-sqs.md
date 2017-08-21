@@ -22,24 +22,6 @@ Ref: [omar-base](../../../omar-base/docs/install-guide/omar-base/)
 ## Configuration
 Settings from the [Common Config Settings](../../../omar-common/docs/install-guide/omar-common/#common-config-settings) can be added to the base YAML definition:
 
-```
-server:
-  contextPath:
-  port: 8080
-
-omar:
-  sqs:
-    reader:
-      queue: "https://<AmazonDNS>/<path_to_queue>"
-      waitTimeSeconds: 20
-      maxNumberOfMessages: 5
-      pollingIntervalSeconds: 3
-      destination:
-        type: "post"
-        post:
-            urlEndPoint: "http://<IP OR DNS>/avro-app/avro/addMessage"
-```
-
 * **queue** defines an Amazon SQS endpoint for access.
 * **waitTimeSecond** This value can be between 1 and 20 and can not exceed 20 or you get errors and the service will not start proeprly.  This value is used by the AWS API to wait for a maximum time for a message to occur before returning.
 * **maxNumberOfMessages** Value can only be between 1 and 10.  Any other value will give errors and the service will not start properly.  This defines the maximum number of messages to pop off the queue during a single read request to the service.
