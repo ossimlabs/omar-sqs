@@ -18,6 +18,7 @@ class SqsReaderJob {
     def endtime
     def procTime
     def ingestdate
+    def sqs_logs
     def destinationType = config.reader.destination.type.toLowerCase()
     if(config.reader.queue)
     {
