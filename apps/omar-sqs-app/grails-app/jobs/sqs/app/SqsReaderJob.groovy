@@ -34,6 +34,7 @@ class SqsReaderJob {
 
         def messagesToDelete = []
         def messageBodyList  = []
+        String url
         messages?.each{message->
           try{
             starttime = System.currentTimeMillis()
@@ -52,7 +53,7 @@ class SqsReaderJob {
                   messagesToDelete << message
                   break
                 case "post":
-                  String url = config.reader.destination.post.urlEndPoint
+                  url = config.reader.destination.post.urlEndPoint
                   log.info "Posting message to ${url}"
                   def result = sqsService.postMessage(url, message.body)
                  // is a 200 range response
@@ -78,7 +79,7 @@ class SqsReaderJob {
             procTime = endtime - starttime
             log.info "time for ingest: " + procTime
 
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime)
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, inboxuri: url)
 
             log.info sqs_logs.toString()
 
