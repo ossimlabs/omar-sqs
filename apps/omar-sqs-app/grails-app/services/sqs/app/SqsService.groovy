@@ -78,6 +78,7 @@ class SqsService {
    def postMessage(String url, String message)
    {
       def result = [status:200,message:""]
+      def starttime
       try{
          HttpPost post = new HttpPost(url);
          post.addHeader("Content-Type", "application/json");
@@ -86,6 +87,12 @@ class SqsService {
          HttpClient client = new DefaultHttpClient();
 
          HttpResponse response = client.execute(post);
+
+         starttime = System.currentTimeMillis()
+
+         log.info "Ingested an image at time: " + starttime
+
+         /* other metrics information will be available in stager/avro */
 
          if(response)
          {
