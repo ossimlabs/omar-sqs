@@ -1,5 +1,8 @@
 package sqs.app
 
+import groovy.json.JsonBuilder
+
+
 class SqsReaderJob {
    def sqsService
 
