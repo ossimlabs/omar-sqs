@@ -79,7 +79,7 @@ class SqsReaderJob {
             procTime = endtime - starttime
             log.info "time for ingest: " + procTime
 
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, inboxuri: url)
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime)
 
             log.info sqs_logs.toString()
 
