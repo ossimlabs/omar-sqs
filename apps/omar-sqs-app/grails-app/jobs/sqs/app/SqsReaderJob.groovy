@@ -11,6 +11,7 @@ class SqsReaderJob {
     Boolean keepGoing = true
     def messages
     def config = SqsUtils.sqsConfig
+    def starttime
     def destinationType = config.reader.destination.type.toLowerCase()
     if(config.reader.queue)
     {
@@ -18,6 +19,11 @@ class SqsReaderJob {
       while(messages = sqsService?.receiveMessages())
       {
         log.debug "TRAVERSING MESSAGES"
+        starttime = System.currentTimeMillis()
+
+        log.info "Ingested an image at time: " + starttime
+
+
         def messagesToDelete = []
         def messageBodyList  = []
         messages?.each{message->
