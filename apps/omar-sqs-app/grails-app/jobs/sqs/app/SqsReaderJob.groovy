@@ -72,6 +72,15 @@ class SqsReaderJob {
               log.error("ERROR: BAD MD5 Checksum For Message: ${messageBody}")
               messagesToDelete << message
             }
+
+            endtime = System.currentTimeMillis()
+            procTime = endtime - starttime
+            log.info "time for ingest: " + procTime
+
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, inboxurl: ${url})
+
+            log.info sqs_logs.toString()
+
           }
           catch(e)
           {
@@ -86,13 +95,6 @@ class SqsReaderJob {
                                        messagesToDelete)
         messagesToDelete = []
 
-        endtime = System.currentTimeMillis()
-        procTime = endtime - starttime
-        log.info "time for ingest: " + procTime
-
-        sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, inboxurl: url)
-
-        log.info sqs_logs.toString()
 
       }
     }
