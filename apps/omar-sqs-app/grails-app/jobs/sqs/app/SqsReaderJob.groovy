@@ -12,6 +12,8 @@ class SqsReaderJob {
     def messages
     def config = SqsUtils.sqsConfig
     def starttime
+    def endtime
+    def ingestdate
     def destinationType = config.reader.destination.type.toLowerCase()
     if(config.reader.queue)
     {
@@ -19,15 +21,17 @@ class SqsReaderJob {
       while(messages = sqsService?.receiveMessages())
       {
         log.debug "TRAVERSING MESSAGES"
-        starttime = System.currentTimeMillis()
 
-        log.info "Ingested an image at time: " + starttime
+        ingestdate = new Date().format("YYYY-MM-DD HH:mm:ss.Ms")
+
+        log.info "Ingested an image at time: " + ingestdate
 
 
         def messagesToDelete = []
         def messageBodyList  = []
         messages?.each{message->
           try{
+            starttime = System.currentTimeMillis()
             log.debug "Checking Md5 checksum"
             if(sqsService.checkMd5(message.mD5OfBody, message.body))
             {
@@ -77,6 +81,15 @@ class SqsReaderJob {
                                        SqsUtils.sqsConfig.reader.queue,
                                        messagesToDelete)
         messagesToDelete = []
+
+        endtime = System.currentTimeMillis()
+        procTime = endtime - starttime
+        log.info "time for ingest: " + procTime
+
+        sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, inboxurl: url)
+
+        log.info sqs_logs.toString()
+
       }
     }
   }
