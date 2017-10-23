@@ -79,6 +79,7 @@ class SqsService {
    {
       def result = [status:200,message:""]
       def starttime
+      log.info "got to postmessage"
       try{
          HttpPost post = new HttpPost(url);
          post.addHeader("Content-Type", "application/json");
