@@ -1,5 +1,8 @@
 package sqs.app
 
+import groovy.json.JsonBuilder
+
+
 class SqsReaderJob {
    def sqsService
 
@@ -11,6 +14,11 @@ class SqsReaderJob {
     Boolean keepGoing = true
     def messages
     def config = SqsUtils.sqsConfig
+    def starttime
+    def endtime
+    def procTime
+    def ingestdate
+    def sqs_logs
     def destinationType = config.reader.destination.type.toLowerCase()
     if(config.reader.queue)
     {
@@ -18,10 +26,18 @@ class SqsReaderJob {
       while(messages = sqsService?.receiveMessages())
       {
         log.debug "TRAVERSING MESSAGES"
+
+        ingestdate = new Date().format("YYYY-MM-DD HH:mm:ss.Ms")
+
+        log.info "Ingested an image at time: " + ingestdate
+
+
         def messagesToDelete = []
         def messageBodyList  = []
+        String url
         messages?.each{message->
           try{
+            starttime = System.currentTimeMillis()
             log.debug "Checking Md5 checksum"
             if(sqsService.checkMd5(message.mD5OfBody, message.body))
             {
@@ -37,7 +53,7 @@ class SqsReaderJob {
                   messagesToDelete << message
                   break
                 case "post":
-                  String url = config.reader.destination.post.urlEndPoint
+                  url = config.reader.destination.post.urlEndPoint
                   log.info "Posting message to ${url}"
                   def result = sqsService.postMessage(url, message.body)
                  // is a 200 range response
@@ -58,6 +74,15 @@ class SqsReaderJob {
               log.error("ERROR: BAD MD5 Checksum For Message: ${messageBody}")
               messagesToDelete << message
             }
+
+            endtime = System.currentTimeMillis()
+            procTime = endtime - starttime
+            log.info "time for ingest: " + procTime
+
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime)
+
+            log.info sqs_logs.toString()
+
           }
           catch(e)
           {
@@ -71,6 +96,8 @@ class SqsReaderJob {
                                        SqsUtils.sqsConfig.reader.queue,
                                        messagesToDelete)
         messagesToDelete = []
+
+
       }
     }
   }

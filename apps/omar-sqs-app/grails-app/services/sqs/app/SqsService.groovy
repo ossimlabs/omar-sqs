@@ -87,6 +87,8 @@ class SqsService {
 
          HttpResponse response = client.execute(post);
 
+         /* other metrics information will be available in stager/avro */
+
          if(response)
          {
             result.message = response?.statusLine
