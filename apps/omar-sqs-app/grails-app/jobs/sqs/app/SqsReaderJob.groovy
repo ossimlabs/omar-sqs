@@ -22,11 +22,8 @@ class SqsReaderJob {
     def destinationType = config.reader.destination.type.toLowerCase()
     if(config.reader.queue)
     {
-      log.debug "Testing for SQS messages"
       while(messages = sqsService?.receiveMessages())
       {
-        log.debug "TRAVERSING MESSAGES"
-
         ingestdate = new Date().format("YYYY-MM-DD HH:mm:ss.Ms")
 
         log.info "Ingested an image at time: " + ingestdate
@@ -38,12 +35,9 @@ class SqsReaderJob {
         messages?.each{message->
           try{
             starttime = System.currentTimeMillis()
-            log.debug "Checking Md5 checksum"
             if(sqsService.checkMd5(message.mD5OfBody, message.body))
             {
-              log.debug "PASSED MD5"
-
-              // try a output here and if fails then do not mark the message 
+              // try a output here and if fails then do not mark the message
               // for deletion
               //
               switch(destinationType)
@@ -54,7 +48,6 @@ class SqsReaderJob {
                   break
                 case "post":
                   url = config.reader.destination.post.urlEndPoint
-                  log.info "Posting message to ${url}"
                   def result = sqsService.postMessage(url, message.body)
                  // is a 200 range response
                  //
@@ -77,8 +70,6 @@ class SqsReaderJob {
 
             endtime = System.currentTimeMillis()
             procTime = endtime - starttime
-            log.info "time for ingest: " + procTime
-
             sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime)
 
             log.info sqs_logs.toString()
@@ -91,7 +82,6 @@ class SqsReaderJob {
 
           messageBodyList = []
         }
-        log.info "MESSAGES DELETING!!!!"
         if(messagesToDelete) sqsService.deleteMessages(
                                        SqsUtils.sqsConfig.reader.queue,
                                        messagesToDelete)
