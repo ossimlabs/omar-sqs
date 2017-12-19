@@ -138,7 +138,7 @@ class SqsService {
 
 //         messages = sqs.receiveMessage(config.reader.queue).messages
 
-         log.debug "Message"
+         log.debug "Message" + messages
       }
       catch(e)
       {

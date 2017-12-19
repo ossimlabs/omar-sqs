@@ -24,10 +24,7 @@ class SqsReaderJob {
     {
       while(messages = sqsService?.receiveMessages())
       {
-        ingestdate = new Date().format("YYYY-MM-DD HH:mm:ss.Ms")
-
-        log.info "Ingested an image at time: " + ingestdate
-
+        ingestdate = new Date().format("yyyy-MM-dd hh:mm:ss.ms")
 
         def messagesToDelete = []
         def messageBodyList  = []
