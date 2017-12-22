@@ -17,6 +17,7 @@ class SqsReaderJob {
   }
 
   def execute() {
+      println "SANITY CHECK"
     Boolean keepGoing = true
     def messages
     def config = SqsUtils.sqsConfig
