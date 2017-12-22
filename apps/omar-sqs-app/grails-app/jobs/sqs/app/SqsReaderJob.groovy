@@ -66,7 +66,7 @@ class SqsReaderJob {
 
             endtime = System.currentTimeMillis()
             procTime = endtime - starttime
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, message: message.body)
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, message: message.body.Message)
 
             log.info sqs_logs.toString()
 
