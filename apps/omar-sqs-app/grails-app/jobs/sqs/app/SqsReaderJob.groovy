@@ -5,9 +5,10 @@ import groovy.json.JsonBuilder
 
 class SqsReaderJob {
    def sqsService
+   def concurrent = false
 
    static triggers = {
-      simple name: 'SqsReaderTrigger', group: 'SqsReaderGroup'
+      simple repeatInterval: 5000l, name: 'SqsReaderTrigger', group: 'SqsReaderGroup'
    }
 
   def execute() {
