@@ -12,6 +12,10 @@ class SqsReaderJob {
       simple repeatInterval: 5000l, name: 'SqsReaderTrigger', group: 'SqsReaderGroup'
    }
 
+  def getLogMessage() {
+
+  }
+
   def execute() {
     Boolean keepGoing = true
     def messages
@@ -39,6 +43,15 @@ class SqsReaderJob {
               // try a output here and if fails then do not mark the message
               // for deletion
               //
+
+              // Make logs to pass to Avro
+              def jsonbody = new JsonSlurper().parseText(message.body)
+              def json = new JsonSlurper().parseText(jsonbody.Message)
+              sqs_logs = new JsonBuilder(ingestdate: ingestdate, starttime: starttime, acquistiondate: json.observationDateTime,
+                      imageId: json.imageId, url: json.uRL)
+
+              message.body["sqs_logs"] = sqs_logs
+
               switch(destinationType)
               {
                 case "stdout":
@@ -74,7 +87,9 @@ class SqsReaderJob {
             sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
             imageId: json.imageId, url: json.uRL)
 
-            log.info sqs_logs.toString()
+//            log.info sqs_logs.toString()
+            // Printing to avoid log header.
+            println sqs_logs.toString()
 
           }
           catch(e)
