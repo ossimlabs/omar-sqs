@@ -67,7 +67,6 @@ class SqsReaderJob {
 
             endtime = System.currentTimeMillis()
             procTime = endtime - starttime
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, message: message.body)
 
             def jsonbody = new JsonSlurper().parseText(message.body)
             log.info "jsonbody" + jsonbody.Message
@@ -75,6 +74,8 @@ class SqsReaderJob {
  //           log.info "son" + json.uRL
  //           log.info "message" + message
  //           log.info "message" + message.uRL
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: jsonbody.Message.observationDateTime,
+            imageId: jsonbody.Message.imageId, url: jsonbody.Message.uRL)
 
             log.info sqs_logs.toString()
 
