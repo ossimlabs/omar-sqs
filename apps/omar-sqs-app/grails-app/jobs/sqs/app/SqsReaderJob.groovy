@@ -74,8 +74,8 @@ class SqsReaderJob {
             log.info "json.uRL" + json.uRL
             log.info "json.observationDateTime" + json.observationDateTime
             log.info "message" + json.imageId
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: jsonbody.Message.observationDateTime,
-            imageId: jsonbody.Message.imageId, url: jsonbody.Message.uRL)
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
+            imageId: json.imageId, url: json.uRL)
 
             log.info sqs_logs.toString()
 
