@@ -1,6 +1,7 @@
 package sqs.app
 
 import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 
 
 class SqsReaderJob {
@@ -66,7 +67,10 @@ class SqsReaderJob {
 
             endtime = System.currentTimeMillis()
             procTime = endtime - starttime
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, message: message.body.Message)
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, message: message.body)
+
+            def json = new JsonSlurper().parseText(message.body)
+            log.info json.uRL
 
             log.info sqs_logs.toString()
 
