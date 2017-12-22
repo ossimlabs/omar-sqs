@@ -69,11 +69,7 @@ class SqsReaderJob {
             procTime = endtime - starttime
 
             def jsonbody = new JsonSlurper().parseText(message.body)
-            log.info "jsonbody" + jsonbody.Message
             def json = new JsonSlurper().parseText(jsonbody.Message)
-            log.info "json.uRL" + json.uRL
-            log.info "json.observationDateTime" + json.observationDateTime
-            log.info "message" + json.imageId
             sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
             imageId: json.imageId, url: json.uRL)
 
