@@ -40,7 +40,6 @@ class SqsReaderJob {
               switch(destinationType)
               {
                 case "stdout":
-                  log.info message.body
                   messagesToDelete << message
                   break
                 case "post":
@@ -67,7 +66,7 @@ class SqsReaderJob {
 
             endtime = System.currentTimeMillis()
             procTime = endtime - starttime
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime)
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, message: message.body)
 
             log.info sqs_logs.toString()
 
