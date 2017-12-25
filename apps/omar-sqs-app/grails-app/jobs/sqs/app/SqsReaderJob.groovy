@@ -17,6 +17,8 @@ class SqsReaderJob {
   }
 
   def execute() {
+      println "SANITY CHECK"
+    log.error "SANITY CHECK 2"
     Boolean keepGoing = true
     def messages
     def config = SqsUtils.sqsConfig
@@ -30,6 +32,7 @@ class SqsReaderJob {
     {
       while(messages = sqsService?.receiveMessages())
       {
+        println "DEBUG!!!"
         ingestdate = new Date().format("yyyy-MM-dd hh:mm:ss.ms")
 
         def messagesToDelete = []
