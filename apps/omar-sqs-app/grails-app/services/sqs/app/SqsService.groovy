@@ -78,7 +78,7 @@ class SqsService {
    def postMessage(String url, String message)
    {
       def result = [status:200,message:""]
-      println "GOT TO POST MESSAGE IN SQS SERVICE"
+      println "GOT TO POST MESSAGE IN SQS SERVICES"
       try{
          HttpPost post = new HttpPost(url);
          post.addHeader("Content-Type", "application/json");
