@@ -85,7 +85,7 @@ class SqsReaderJob {
 
             def jsonbody = new JsonSlurper().parseText(message.body)
             def json = new JsonSlurper().parseText(jsonbody.Message)
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
+            sqs_logs = new JsonBuilder(ingestdateAAAA: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
             imageId: json.imageId, url: json.uRL)
 
 //            log.info sqs_logs.toString()
