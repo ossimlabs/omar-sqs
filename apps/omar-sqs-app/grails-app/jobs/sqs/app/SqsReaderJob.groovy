@@ -56,7 +56,7 @@ class SqsReaderJob {
                   break
                 case "post":
                   url = config.reader.destination.post.urlEndPoint
-                  println "message.body" + message.body
+
                   def result = sqsService.postMessage(url, message.body)
                  // is a 200 range response
                  //
@@ -87,7 +87,12 @@ class SqsReaderJob {
 
 //            log.info sqs_logs.toString()
             // Printing to avoid log header.
-            println sqs_logs.toString()
+            println "sqs_logs before" + sqs_logs.toString()
+
+            message.body["sqs_logs"] = sqs_logs.toString()
+
+            println "sqs_logs after" + println sqs_logs.toString()
+
 
           }
           catch(e)
