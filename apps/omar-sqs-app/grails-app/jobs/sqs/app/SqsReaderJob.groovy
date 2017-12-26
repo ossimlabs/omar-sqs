@@ -74,9 +74,10 @@ class SqsReaderJob {
                   println "json" + json
 
                   println "Message DEBUG1: ${message}"
-                  jsonbody.Message = json.toString()
-                  message.body = jsonbody.toString()
+                  jsonbody.Message = json
+                  message.body = jsonbody
                   println "Message DEBUG2: ${message}"
+                  println "DEBUG SQS_LOGS: $sqs_logs"
 
 
                   def result = sqsService.postMessage(url, message.body)
