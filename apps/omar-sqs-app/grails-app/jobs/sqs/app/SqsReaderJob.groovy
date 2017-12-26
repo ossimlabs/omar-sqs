@@ -20,11 +20,7 @@ class SqsReaderJob {
     Boolean keepGoing = true
     def messages
     def config = SqsUtils.sqsConfig
-    def starttime
-    def endtime
-    def procTime
     def ingestdate
-    def sqs_logs
     def destinationType = config.reader.destination.type.toLowerCase()
     if(config.reader.queue)
     {
@@ -37,18 +33,8 @@ class SqsReaderJob {
         String url
         messages?.each{message->
           try{
-            starttime = System.currentTimeMillis()
             if(sqsService.checkMd5(message.mD5OfBody, message.body))
             {
-
-              // Make logs to pass to Avro
-/*              def jsonbody = new JsonSlurper().parseText(message.body)
-              def json = new JsonSlurper().parseText(jsonbody.Message)
-              sqs_logs = new JsonBuilder(ingestdate: ingestdate, starttime: starttime, acquistiondate: json.observationDateTime,
-                      imageId: json.imageId, url: json.uRL)
-
-              message.body["sqs_logs"] = sqs_logs */
-
               switch(destinationType)
               {
                 case "stdout":
@@ -57,27 +43,17 @@ class SqsReaderJob {
                 case "post":
                   url = config.reader.destination.post.urlEndPoint
 
-                  endtime = System.currentTimeMillis()
-                  procTime = endtime - starttime
-
                   def jsonbody = new JsonSlurper().parseText(message.body)
                   def json = new JsonSlurper().parseText(jsonbody.Message)
-                  sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
-                          imageId: json.imageId, url: json.uRL)
 
                   json["ingestdate_sqs"] = ingestdate
-                  json["procTime_sqs"] = procTime
                   json["acquistiondate"] = json.observationDateTime
                   json["imageId"] = json.imageId
                   json["url"] = json.uRL
 
-                  println "json" + json
-
-                  println "Message DEBUG1: ${message}"
                   jsonbody.Message = new JsonBuilder(json).toString()
                   message.body = new JsonBuilder(jsonbody)
                   println "Message DEBUG2: ${message}"
-                  println "DEBUG SQS_LOGS: $sqs_logs"
 
 
                   def result = sqsService.postMessage(url, message.body)
