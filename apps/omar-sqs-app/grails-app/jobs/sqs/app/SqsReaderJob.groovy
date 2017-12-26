@@ -74,7 +74,7 @@ class SqsReaderJob {
                   println "json" + json
 
                   println "Message DEBUG1: ${message}"
-                  jsonbody.Message = new JsonBuilder(json)
+                  jsonbody.Message = new JsonBuilder(json).toPrettyString()
                   message.body = new JsonBuilder(jsonbody)
                   println "Message DEBUG2: ${message}"
                   println "DEBUG SQS_LOGS: $sqs_logs"
