@@ -78,14 +78,11 @@ class SqsService {
    def postMessage(String url, String message)
    {
       def result = [status:200,message:""]
-      println "GOT TO POST MESSAGE IN SQS SERVICES"
       try{
          HttpPost post = new HttpPost(url);
          post.addHeader("Content-Type", "application/json");
-         println "GOT AFTER ADD HEADER"
          StringEntity entity = new StringEntity(message);
          post.setEntity(entity);
-         println "GOT AFTER SET ENTITY"
          HttpClient client = new DefaultHttpClient();
 
          println "GOT BEFORE EXECUTE"
