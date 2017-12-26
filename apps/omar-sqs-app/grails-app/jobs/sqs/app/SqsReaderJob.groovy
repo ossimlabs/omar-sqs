@@ -82,16 +82,22 @@ class SqsReaderJob {
 
             def jsonbody = new JsonSlurper().parseText(message.body)
             def json = new JsonSlurper().parseText(jsonbody.Message)
+            println "json" + json
             sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
             imageId: json.imageId, url: json.uRL)
 
+            json << [ingestdate: ingestdate]
+
+            println "jsonbody" + jsonbody
+            println "json" + json
+
 //            log.info sqs_logs.toString()
             // Printing to avoid log header.
-            println "sqs_logs before" + sqs_logs.toString()
+//            println "sqs_logs before" + sqs_logs.toString()
 
-            message.body["sqs_logs"] = sqs_logs.toString()
+//            message.body["sqs_logs"] = sqs_logs.toString()
 
-            println "sqs_logs after" + println sqs_logs.toString()
+//            println "sqs_logs after" + println sqs_logs.toString()
 
 
           }
