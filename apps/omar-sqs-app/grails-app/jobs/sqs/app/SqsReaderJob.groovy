@@ -73,6 +73,11 @@ class SqsReaderJob {
 
                   println "json" + json
 
+                  println "Message DEBUG: $message"
+                  println "Message DEBUG: ${message}"
+                  message.body.Message = json
+                  println "Message DEBUG: ${message}"
+
 
                   def result = sqsService.postMessage(url, message.body)
                  // is a 200 range response
