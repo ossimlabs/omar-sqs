@@ -85,7 +85,6 @@ class SqsService {
          post.setEntity(entity);
          HttpClient client = new DefaultHttpClient();
 
-         println "GOT BEFORE EXECUTE"
          HttpResponse response = client.execute(post);
 
          /* other metrics information will be available in stager/avro */
