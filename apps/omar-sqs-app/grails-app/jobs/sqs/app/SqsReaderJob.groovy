@@ -74,7 +74,7 @@ class SqsReaderJob {
                   println "json" + json
 
 
-                  def result = sqsService.postMessage(url, json)
+                  def result = sqsService.postMessage(url, json.toString())
                  // is a 200 range response
                  //
                   if((result?.status >= 200) && (result?.status <300))
