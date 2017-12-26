@@ -86,7 +86,11 @@ class SqsReaderJob {
             sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
             imageId: json.imageId, url: json.uRL)
 
-            json << [ingestdate: ingestdate]
+            jsonbody << [ingestdate_sqs: ingestdate]
+            jsonbody << [procTime_sqs: procTime]
+            jsonbody << [acquistiondate: json.observationDateTime]
+            jsonbody << [imageId: json.imageId]
+            jsonbody << [url: json.uRL]
 
             println "jsonbody" + jsonbody
             println "json" + json
