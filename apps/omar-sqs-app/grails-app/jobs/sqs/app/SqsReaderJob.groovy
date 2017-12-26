@@ -17,8 +17,6 @@ class SqsReaderJob {
   }
 
   def execute() {
-      println "SANITY CHECK"
-    log.error "SANITY CHECK 2"
     Boolean keepGoing = true
     def messages
     def config = SqsUtils.sqsConfig
@@ -32,7 +30,6 @@ class SqsReaderJob {
     {
       while(messages = sqsService?.receiveMessages())
       {
-        println "DEBUG!!!"
         ingestdate = new Date().format("yyyy-MM-dd hh:mm:ss.ms")
 
         def messagesToDelete = []
@@ -43,17 +40,14 @@ class SqsReaderJob {
             starttime = System.currentTimeMillis()
             if(sqsService.checkMd5(message.mD5OfBody, message.body))
             {
-              // try a output here and if fails then do not mark the message
-              // for deletion
-              //
 
               // Make logs to pass to Avro
-              def jsonbody = new JsonSlurper().parseText(message.body)
+/*              def jsonbody = new JsonSlurper().parseText(message.body)
               def json = new JsonSlurper().parseText(jsonbody.Message)
               sqs_logs = new JsonBuilder(ingestdate: ingestdate, starttime: starttime, acquistiondate: json.observationDateTime,
                       imageId: json.imageId, url: json.uRL)
 
-              message.body["sqs_logs"] = sqs_logs
+              message.body["sqs_logs"] = sqs_logs */
 
               switch(destinationType)
               {
@@ -88,7 +82,7 @@ class SqsReaderJob {
 
             def jsonbody = new JsonSlurper().parseText(message.body)
             def json = new JsonSlurper().parseText(jsonbody.Message)
-            sqs_logs = new JsonBuilder(ingestdateAAAA: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
+            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
             imageId: json.imageId, url: json.uRL)
 
 //            log.info sqs_logs.toString()
