@@ -91,7 +91,7 @@ class SqsReaderJob {
             json << [imageId: json.imageId]
             json << [url: json.uRL]
 
-            println "json" + jsonbody
+            println "json" + json
 
 //            log.info sqs_logs.toString()
             // Printing to avoid log header.
