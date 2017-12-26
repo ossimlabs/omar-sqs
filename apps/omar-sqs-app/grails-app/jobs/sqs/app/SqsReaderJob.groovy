@@ -57,7 +57,24 @@ class SqsReaderJob {
                 case "post":
                   url = config.reader.destination.post.urlEndPoint
 
-                  def result = sqsService.postMessage(url, message.body)
+                  endtime = System.currentTimeMillis()
+                  procTime = endtime - starttime
+
+                  def jsonbody = new JsonSlurper().parseText(message.body)
+                  def json = new JsonSlurper().parseText(jsonbody.Message)
+                  sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
+                          imageId: json.imageId, url: json.uRL)
+
+                  json << [ingestdate_sqs: ingestdate]
+                  json << [procTime_sqs: procTime]
+                  json << [acquistiondate: json.observationDateTime]
+                  json << [imageId: json.imageId]
+                  json << [url: json.uRL]
+
+                  println "json" + json
+
+
+                  def result = sqsService.postMessage(url, json)
                  // is a 200 range response
                  //
                   if((result?.status >= 200) && (result?.status <300))
@@ -76,32 +93,6 @@ class SqsReaderJob {
               log.error("ERROR: BAD MD5 Checksum For Message: ${messageBody}")
               messagesToDelete << message
             }
-
-            endtime = System.currentTimeMillis()
-            procTime = endtime - starttime
-
-            def jsonbody = new JsonSlurper().parseText(message.body)
-            def json = new JsonSlurper().parseText(jsonbody.Message)
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime, acquistiondate: json.observationDateTime,
-            imageId: json.imageId, url: json.uRL)
-
-            json << [ingestdate_sqs: ingestdate]
-            json << [procTime_sqs: procTime]
-            json << [acquistiondate: json.observationDateTime]
-            json << [imageId: json.imageId]
-            json << [url: json.uRL]
-
-            println "json" + json
-
-//            log.info sqs_logs.toString()
-            // Printing to avoid log header.
-//            println "sqs_logs before" + sqs_logs.toString()
-
-//            message.body["sqs_logs"] = sqs_logs.toString()
-
-//            println "sqs_logs after" + println sqs_logs.toString()
-
-
           }
           catch(e)
           {
