@@ -26,7 +26,7 @@ class SqsReaderJob {
     {
       while(messages = sqsService?.receiveMessages())
       {
-        ingestdate = new Date()
+        ingestdate = new Date().format("yyyy-MM-dd HH:mm:ss.ms")
 
         def messagesToDelete = []
         def messageBodyList  = []
