@@ -26,7 +26,7 @@ class SqsReaderJob {
     {
       while(messages = sqsService?.receiveMessages())
       {
-        ingestdate = new Date().format("yyyy-MM-dd hh:mm:ss.ms")
+        ingestdate = new Date()
 
         def messagesToDelete = []
         def messageBodyList  = []
@@ -53,7 +53,6 @@ class SqsReaderJob {
 
                   jsonbody.Message = new JsonBuilder(json).toString()
                   message.body = new JsonBuilder(jsonbody)
-                  println "Message DEBUG2: ${message}"
 
 
                   def result = sqsService.postMessage(url, message.body)
