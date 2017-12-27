@@ -47,7 +47,7 @@ class SqsReaderJob {
                   def json = new JsonSlurper().parseText(jsonbody.Message)
 
                   json["ingestdate_sqs"] = ingestdate
-                  json["acquistiondate"] = json.observationDateTime
+                  json["acquisitiondate"] = json.observationDateTime
                   json["imageId"] = json.imageId
                   json["url"] = json.uRL
 
