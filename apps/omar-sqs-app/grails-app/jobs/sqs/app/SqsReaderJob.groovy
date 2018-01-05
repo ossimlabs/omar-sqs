@@ -1,60 +1,60 @@
 package sqs.app
 
 import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 
 
 class SqsReaderJob {
    def sqsService
+   def concurrent = false
 
    static triggers = {
-      simple name: 'SqsReaderTrigger', group: 'SqsReaderGroup'
+      simple repeatInterval: 5000l, name: 'SqsReaderTrigger', group: 'SqsReaderGroup'
    }
+
+  def getLogMessage() {
+
+  }
 
   def execute() {
     Boolean keepGoing = true
     def messages
     def config = SqsUtils.sqsConfig
-    def starttime
-    def endtime
-    def procTime
     def ingestdate
-    def sqs_logs
     def destinationType = config.reader.destination.type.toLowerCase()
     if(config.reader.queue)
     {
-      log.debug "Testing for SQS messages"
       while(messages = sqsService?.receiveMessages())
       {
-        log.debug "TRAVERSING MESSAGES"
-
-        ingestdate = new Date().format("YYYY-MM-DD HH:mm:ss.Ms")
-
-        log.info "Ingested an image at time: " + ingestdate
-
+        ingestdate = new Date().format("yyyy-MM-dd HH:mm:ss.SSS")
 
         def messagesToDelete = []
         def messageBodyList  = []
         String url
         messages?.each{message->
           try{
-            starttime = System.currentTimeMillis()
-            log.debug "Checking Md5 checksum"
             if(sqsService.checkMd5(message.mD5OfBody, message.body))
             {
-              log.debug "PASSED MD5"
-
-              // try a output here and if fails then do not mark the message 
-              // for deletion
-              //
               switch(destinationType)
               {
                 case "stdout":
-                  log.info message.body
                   messagesToDelete << message
                   break
                 case "post":
                   url = config.reader.destination.post.urlEndPoint
-                  log.info "Posting message to ${url}"
+
+                  def jsonbody = new JsonSlurper().parseText(message.body)
+                  def json = new JsonSlurper().parseText(jsonbody.Message)
+
+                  json["ingest_date"] = ingestdate
+                  json["acquisition_date"] = json.observationDateTime
+                  json["image_id"] = json.imageId
+                  json["url"] = json.uRL
+
+                  jsonbody.Message = new JsonBuilder(json).toString()
+                  message.body = new JsonBuilder(jsonbody)
+
+
                   def result = sqsService.postMessage(url, message.body)
                  // is a 200 range response
                  //
@@ -74,15 +74,6 @@ class SqsReaderJob {
               log.error("ERROR: BAD MD5 Checksum For Message: ${messageBody}")
               messagesToDelete << message
             }
-
-            endtime = System.currentTimeMillis()
-            procTime = endtime - starttime
-            log.info "time for ingest: " + procTime
-
-            sqs_logs = new JsonBuilder(ingestdate: ingestdate, procTime: procTime)
-
-            log.info sqs_logs.toString()
-
           }
           catch(e)
           {
@@ -91,7 +82,6 @@ class SqsReaderJob {
 
           messageBodyList = []
         }
-        log.info "MESSAGES DELETING!!!!"
         if(messagesToDelete) sqsService.deleteMessages(
                                        SqsUtils.sqsConfig.reader.queue,
                                        messagesToDelete)

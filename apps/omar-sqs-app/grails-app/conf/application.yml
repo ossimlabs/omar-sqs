@@ -1,4 +1,42 @@
 ---
+logging:
+  config: classpath:logback.groovy
+
+omar:
+  sqs:
+    reader:
+      # Defines an Amazon SQS endpoint for access.
+      queue: "https://sqs.us-east-1.amazonaws.com/320588532383/avro-dev"
+      # This value can be between 1 and 20 and can not exceed 20 or you get errors and the service will not start proeprly.
+      # This value is used by the AWS API to wait for a maximum time for a message to occur before returning.
+      waitTimeSeconds: 20
+      # Value can only be between 1 and 10.
+      # Any other value will give errors and the service will not start properly.
+      # This defines the maximum number of messages to pop off the queue during a single read request to the service.
+      maxNumberOfMessages: 5
+      # This can be any value and defines the number of second to "SLEEP" the background process between each call to the read request.
+      # By default it will keep calling the read request until no messages are found.
+      # After no messages are found the backgroun process will then "SLEEP" for "pollingIntervalSeconds".
+      pollingIntervalSeconds: 3
+      destination:
+        # This value can be either "post" or "stdout".
+        # If the value is a post then it expects the "post" entry to be defined.
+        # If the type is stdout then all message payload/message body are printed to standard out.
+        type: "post"
+        post:
+            field: message
+            # Defines the url to post the message to.
+            # The example here was taken from the ossim-vagrant implementation
+            urlEndPoint: "http://omar-avro-app:8080/omar-avro/avro/addMessage"
+
+quartz:
+  jdbcStore:   false
+
+# Set the context path for the application.
+#server:
+#  contextPath: /omar-sqs
+
+---
 grails:
     cors:
       enabled: true
@@ -146,26 +184,3 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
-
-logging:
-  config: classpath:logback.groovy
-
----
-quartz:
-  jdbcStore:   false
-
-omar:
-  sqs:
-    reader:
-      queue: "https://sqs.us-east-1.amazonaws.com/320588532383/gpotts-tst"
-      waitTimeSeconds: 20
-      maxNumberOfMessages: 1
-      pollingIntervalSeconds: 1
-      destination:
-        type: "stdout"
-        post:
-          urlEndPoint: "http://localhost:8080/avro/addMessage"
-          field: message
-  ingestMetrics:
-    url: ""
-  
