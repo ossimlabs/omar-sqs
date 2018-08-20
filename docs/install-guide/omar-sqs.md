@@ -16,9 +16,6 @@ CMD java -server -Xms256m -Xmx1024m -Djava.awt.headless=true -XX:+CMSClassUnload
 ```
 Ref: [omar-base](../../../omar-base/docs/install-guide/omar-base/)
 
-## JAR
-[https://artifactory.ossim.io/artifactory/webapp/#/artifacts/browse/tree/General/omar-local/io/ossim/omar/apps/omar-sqs-app](https://artifactory.ossim.io/artifactory/webapp/#/artifacts/browse/tree/General/omar-local/io/ossim/omar/apps/omar-sqs-app)
-
 ## Configuration
 Settings from the [Common Config Settings](../../../omar-common/docs/install-guide/omar-common/#common-config-settings) can be added to the base YAML definition:
 
