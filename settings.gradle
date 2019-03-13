@@ -4,14 +4,19 @@ pluginManagement {
     gradlePluginPortal()
   }
 }
-def final O2_DEV_HOME = System.getenv('O2_DEV_HOME')
 
-if ( O2_DEV_HOME ) {
+include 'omar-sqs-app'
 
-   include 'omar-sqs-app',
-	   'omar-core-plugin'
+project(':omar-sqs-app').projectDir = "${rootProject.projectDir}/apps/omar-sqs-app" as File
 
-   project(':omar-sqs-app').projectDir = "${O2_DEV_HOME}/omar-sqs/apps/omar-sqs-app" as File
-   project(':omar-core-plugin').projectDir = "${O2_DEV_HOME}/omar-core/plugins/omar-core-plugin" as File
+if ( System.getenv('O2_INLINE_BUILD')) {
+  def modules = [
+      "omar-core"
+  ]
 
+  modules.each { module ->
+    include "${module}-plugin"
+
+    project(":${module}-plugin").projectDir = "${rootProject.projectDir}/../${module}/plugins/${module}-plugin" as File
+  }
 }
