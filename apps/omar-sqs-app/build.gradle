@@ -9,12 +9,6 @@ buildscript {
   }
   repositories {
     maven { url "${ossimMavenProxy}" }
-    /*
-    if( !System.env.WWW_CONNECTED || Boolean.parseBoolean( System.env.WWW_CONNECTED ) ) {
-        mavenLocal()
-        maven { url "https://repo.grails.org/grails/core" }
-    }
-    */
   }
   dependencies {
     classpath "org.grails:grails-gradle-plugin:$grailsVersion"
@@ -54,12 +48,6 @@ assets {
 
 repositories {
   maven { url "${ossimMavenProxy}" }
-  /*
-  if( !System.env.WWW_CONNECTED || Boolean.parseBoolean( System.env.WWW_CONNECTED ) ) {
-    mavenLocal()
-    maven { url "https://repo.grails.org/grails/core" }
-  }
-  */
 }
 
 dependencyManagement {
